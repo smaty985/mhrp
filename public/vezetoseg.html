@@ -1,1 +1,347 @@
+<!DOCTYPE html>
+<html lang="hu">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Vezetőség • MH RP</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(circle at center,#203625,transparent 45%),
+        #060a07;
+
+    color:#f4f5f1;
+}
+
+.login{
+
+    width:420px;
+    max-width:90%;
+
+    padding:42px;
+
+    background:rgba(14,23,17,.88);
+
+    border:1px solid rgba(255,255,255,.09);
+
+    border-radius:10px;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.5);
+
+    backdrop-filter:blur(20px);
+
+}
+
+.logo{
+
+    text-align:center;
+
+    font-size:35px;
+
+    margin-bottom:10px;
+}
+
+h1{
+
+    text-align:center;
+
+    font-size:25px;
+
+    margin-bottom:8px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#7f8a82;
+
+    font-size:12px;
+
+    margin-bottom:30px;
+
+}
+
+label{
+
+    display:block;
+
+    color:#a8b0aa;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    margin-bottom:7px;
+
+    text-transform:uppercase;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:18px;
+
+    background:#ffffff06;
+
+    border:1px solid #ffffff12;
+
+    border-radius:5px;
+
+    color:white;
+
+    outline:none;
+
+}
+
+input:focus{
+
+    border-color:#d1ae59;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:#d1ae59;
+
+    color:#111;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+button:hover{
+
+    background:#ebd27e;
+
+}
+
+.error{
+
+    display:none;
+
+    margin-bottom:15px;
+
+    padding:12px;
+
+    border-radius:5px;
+
+    background:#8c252522;
+
+    border:1px solid #b8414144;
+
+    color:#e88b8b;
+
+    font-size:12px;
+
+}
+
+.back{
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:22px;
+
+    color:#68736b;
+
+    text-decoration:none;
+
+    font-size:11px;
+
+}
+
+.back:hover{
+
+    color:#d1ae59;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="login">
+
+    <div class="logo">
+        🇭🇺
+    </div>
+
+    <h1>
+        VEZETŐSÉGI BELÉPÉS
+    </h1>
+
+    <div class="subtitle">
+        MAGYAR HONVÉDSÉG • RP
+    </div>
+
+
+    <div id="error" class="error"></div>
+
+
+    <form id="loginForm">
+
+        <label>
+            Felhasználónév
+        </label>
+
+        <input
+            id="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Felhasználónév"
+            required
+        >
+
+
+        <label>
+            Jelszó
+        </label>
+
+        <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Jelszó"
+            required
+        >
+
+
+        <button type="submit">
+            BELÉPÉS A VEZETŐSÉGHEZ
+        </button>
+
+    </form>
+
+
+    <a
+        href="/"
+        class="back">
+        ← Vissza a főoldalra
+    </a>
+
+</div>
+
+
+<script>
+
+const form =
+    document.getElementById("loginForm");
+
+const error =
+    document.getElementById("error");
+
+
+form.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    error.style.display = "none";
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+
+    try {
+
+        const response = await fetch(
+            "/api/login",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:JSON.stringify({
+                    username,
+                    password
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if(data.success){
+
+            window.location.href =
+                "/dashboard";
+
+            return;
+        }
+
+
+        error.textContent =
+            data.message ||
+            "Sikertelen bejelentkezés.";
+
+        error.style.display = "block";
+
+
+    } catch(error){
+
+        document.getElementById("error")
+            .textContent =
+            "Nem sikerült kapcsolódni a szerverhez.";
+
+        document.getElementById("error")
+            .style.display = "block";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
