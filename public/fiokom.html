@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Fiókom - MH RP</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #07110b;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background: #101b13;
+            padding: 20px;
+            border-bottom: 1px solid #344b38;
+        }
+
+        nav a {
+            color: #d7b85b;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #101b13;
+            border: 1px solid #344b38;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #d7b85b;
+        }
+
+        .rank {
+            font-size: 32px;
+            color: #d7b85b;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 13px 20px;
+            border: 0;
+            border-radius: 8px;
+            background: #c9aa4d;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="/">Főoldal</a>
+    <a href="/jelentkezes.html">Jelentkezés</a>
+    <a href="/fiokom.html">Fiókom</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Üdvözöllek!</h1>
+
+        <p>
+            Felhasználónév:
+            <strong id="username"></strong>
+        </p>
+
+        <p>
+            Roblox-név:
+            <strong id="robloxName"></strong>
+        </p>
+
+        <p>
+            Jelenlegi rendfokozat:
+        </p>
+
+        <div class="rank" id="rank">
+            Betöltés...
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Gyors műveletek</h2>
+
+        <button onclick="location.href='/jelentkezes.html'">
+            JELENTKEZÉS
+        </button>
+
+        <button onclick="logout()">
+            KIJELENTKEZÉS
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+async function loadUser() {
+
+    const response =
+        await fetch("/api/me");
+
+    const data =
+        await response.json();
+
+    if (!data.loggedIn) {
+        location.href =
+            "/bejelentkezes.html";
+
+        return;
+    }
+
+    document.getElementById("username")
+        .textContent =
+        data.user.username;
+
+    document.getElementById("robloxName")
+        .textContent =
+        data.user.robloxName;
+
+    document.getElementById("rank")
+        .textContent =
+        data.user.rank;
+}
+
+async function logout() {
+
+    await fetch("/api/logout", {
+        method: "POST"
+    });
+
+    location.href =
+        "/bejelentkezes.html";
+}
+
+loadUser();
+
+</script>
+
+</body>
+</html>
