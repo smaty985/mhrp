@@ -1,1 +1,702 @@
+<!DOCTYPE html>
+<html lang="hu">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Vezetőségi központ • MH RP</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+
+    background:#070b08;
+
+    color:#f2f4f1;
+
+    font-family:Arial,sans-serif;
+}
+
+header{
+
+    height:75px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 5%;
+
+    border-bottom:1px solid #ffffff0d;
+
+    background:#0a100c;
+}
+
+.logo{
+
+    font-weight:900;
+
+    letter-spacing:2px;
+}
+
+.logo span{
+
+    color:#d1ae59;
+}
+
+.user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    color:#89938c;
+
+    font-size:12px;
+}
+
+.logout{
+
+    border:1px solid #ffffff15;
+
+    background:#ffffff05;
+
+    color:white;
+
+    padding:10px 14px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+}
+
+main{
+
+    padding:50px 5%;
+}
+
+.welcome{
+
+    margin-bottom:40px;
+}
+
+.kicker{
+
+    color:#d1ae59;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:3px;
+
+    margin-bottom:10px;
+}
+
+h1{
+
+    font-size:42px;
+}
+
+.subtitle{
+
+    color:#7f8a82;
+
+    margin-top:8px;
+
+}
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:15px;
+
+    margin-bottom:40px;
+}
+
+.stat{
+
+    padding:25px;
+
+    border:1px solid #ffffff0d;
+
+    background:#ffffff04;
+
+    border-radius:7px;
+}
+
+.number{
+
+    color:#d1ae59;
+
+    font-size:30px;
+
+    font-weight:900;
+
+}
+
+.label{
+
+    color:#7f8a82;
+
+    font-size:11px;
+
+    margin-top:5px;
+}
+
+.panel{
+
+    border:1px solid #ffffff0d;
+
+    background:#ffffff04;
+
+    border-radius:7px;
+
+    overflow:hidden;
+}
+
+.panel-header{
+
+    padding:20px 25px;
+
+    border-bottom:1px solid #ffffff0d;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.panel-header h2{
+
+    font-size:18px;
+}
+
+.refresh{
+
+    background:#d1ae59;
+
+    color:#111;
+
+    border:0;
+
+    border-radius:4px;
+
+    padding:9px 13px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+th{
+
+    text-align:left;
+
+    padding:15px 20px;
+
+    color:#6f7972;
+
+    font-size:9px;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+td{
+
+    padding:17px 20px;
+
+    border-top:1px solid #ffffff08;
+
+    font-size:12px;
+
+    color:#b6beb8;
+}
+
+.badge{
+
+    padding:5px 8px;
+
+    border-radius:4px;
+
+    background:#d1ae5912;
+
+    color:#d1ae59;
+
+    font-size:9px;
+
+}
+
+.actions{
+
+    display:flex;
+
+    gap:6px;
+}
+
+.action{
+
+    border:1px solid #ffffff10;
+
+    background:#ffffff04;
+
+    color:#ddd;
+
+    padding:7px 9px;
+
+    border-radius:4px;
+
+    cursor:pointer;
+
+    font-size:10px;
+}
+
+.action:hover{
+
+    border-color:#d1ae59;
+
+}
+
+@media(max-width:800px){
+
+    .stats{
+
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .panel{
+
+        overflow-x:auto;
+    }
+
+    table{
+
+        min-width:700px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        🇭🇺 MH <span>RP</span> • VEZETŐSÉG
+    </div>
+
+
+    <div class="user">
+
+        <span id="username">
+            Betöltés...
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()">
+            KIJELENTKEZÉS
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<div class="welcome">
+
+    <div class="kicker">
+        PARANCSNOKI KÖZPONT
+    </div>
+
+    <h1>
+        Vezetőségi dashboard
+    </h1>
+
+    <div class="subtitle">
+        Az RP-közösség adminisztrációs központja.
+    </div>
+
+</div>
+
+
+<div class="stats">
+
+    <div class="stat">
+
+        <div
+            class="number"
+            id="total">
+            0
+        </div>
+
+        <div class="label">
+            ÖSSZES JELENTKEZÉS
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div
+            class="number"
+            id="pending">
+            0
+        </div>
+
+        <div class="label">
+            FELDOLGOZÁS ALATT
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div
+            class="number"
+            id="accepted">
+            0
+        </div>
+
+        <div class="label">
+            ELFOGADVA
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div
+            class="number"
+            id="rejected">
+            0
+        </div>
+
+        <div class="label">
+            ELUTASÍTVA
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <h2>
+            Jelentkezések
+        </h2>
+
+        <button
+            class="refresh"
+            onclick="loadApplications()">
+            FRISSÍTÉS
+        </button>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Név
+                </th>
+
+                <th>
+                    Discord
+                </th>
+
+                <th>
+                    Kor
+                </th>
+
+                <th>
+                    Státusz
+                </th>
+
+                <th>
+                    Művelet
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="applications">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</main>
+
+
+<script>
+
+
+async function checkLogin(){
+
+    const response =
+        await fetch("/api/me");
+
+    const data =
+        await response.json();
+
+
+    if(!data.loggedIn){
+
+        window.location.href =
+            "/vezetoseg.html";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "username"
+    ).textContent =
+        data.username;
+
+}
+
+
+async function loadApplications(){
+
+    const response =
+        await fetch(
+            "/api/applications"
+        );
+
+
+    if(response.status === 401){
+
+        window.location.href =
+            "/vezetoseg.html";
+
+        return;
+    }
+
+
+    const applications =
+        await response.json();
+
+
+    const tbody =
+        document.getElementById(
+            "applications"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    let pending = 0;
+    let accepted = 0;
+    let rejected = 0;
+
+
+    applications.forEach(app => {
+
+        if(app.status === "Feldolgozás alatt")
+            pending++;
+
+        if(app.status === "Elfogadva")
+            accepted++;
+
+        if(app.status === "Elutasítva")
+            rejected++;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${escapeHtml(app.name)}
+            </td>
+
+            <td>
+                ${escapeHtml(app.discord)}
+            </td>
+
+            <td>
+                ${escapeHtml(String(app.age))}
+            </td>
+
+            <td>
+                <span class="badge">
+                    ${escapeHtml(app.status)}
+                </span>
+            </td>
+
+            <td>
+
+                <div class="actions">
+
+                    <button
+                        class="action"
+                        onclick="changeStatus(${app.id}, 'Elfogadva')">
+                        ✓ Elfogad
+                    </button>
+
+                    <button
+                        class="action"
+                        onclick="changeStatus(${app.id}, 'Elutasítva')">
+                        ✕ Elutasít
+                    </button>
+
+                    <button
+                        class="action"
+                        onclick="changeStatus(${app.id}, 'Feldolgozás alatt')">
+                        ↻ Függőben
+                    </button>
+
+                </div>
+
+            </td>
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        applications.length;
+
+
+    document.getElementById(
+        "pending"
+    ).textContent =
+        pending;
+
+
+    document.getElementById(
+        "accepted"
+    ).textContent =
+        accepted;
+
+
+    document.getElementById(
+        "rejected"
+    ).textContent =
+        rejected;
+
+}
+
+
+async function changeStatus(id,status){
+
+    const response =
+        await fetch(
+            `/api/applications/${id}`,
+            {
+                method:"PATCH",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:JSON.stringify({
+                    status
+                })
+            }
+        );
+
+
+    if(response.ok){
+
+        loadApplications();
+
+    }
+
+}
+
+
+async function logout(){
+
+    await fetch(
+        "/api/logout",
+        {
+            method:"POST"
+        }
+    );
+
+
+    window.location.href =
+        "/";
+
+}
+
+
+function escapeHtml(value){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = value;
+
+    return div.innerHTML;
+
+}
+
+
+checkLogin();
+
+loadApplications();
+
+</script>
+
+</body>
+
+</html>
