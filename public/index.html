@@ -1,1 +1,1189 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Magyar Honvédség RP</title>
+
+    <meta
+        name="description"
+        content="Magyar Honvédség RP - Katonai szerepjáték közösség"
+    >
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #050b07;
+            color: #f1f1f1;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           HÁTTÉR
+        ========================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.08;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size: 50px 50px;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            left: 50%;
+            top: 20%;
+            transform: translate(-50%, -50%);
+
+            background: rgba(80, 110, 70, 0.12);
+            filter: blur(120px);
+            border-radius: 50%;
+
+            pointer-events: none;
+            z-index: -3;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            background: rgba(5, 11, 7, 0.82);
+            backdrop-filter: blur(15px);
+
+            border-bottom: 1px solid rgba(199, 170, 77, 0.15);
+
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #d6b85a;
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .logo-symbol {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid #8e7839;
+            border-radius: 10px;
+
+            background: linear-gradient(
+                145deg,
+                #18251a,
+                #0b120c
+            );
+
+            font-size: 21px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: #c4cbc5;
+            text-decoration: none;
+
+            padding: 11px 14px;
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover {
+            color: #e0c667;
+            background: rgba(214, 184, 90, 0.08);
+        }
+
+        .nav-login {
+            border: 1px solid #66572e;
+        }
+
+        .nav-register {
+            background: #c7a94c !important;
+            color: #111 !important;
+        }
+
+        .nav-register:hover {
+            background: #e0c465 !important;
+            color: #111 !important;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 120px 20px 80px;
+
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 950px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 8px 15px;
+
+            border: 1px solid #304432;
+            border-radius: 30px;
+
+            background: rgba(20, 35, 23, 0.6);
+
+            color: #aeb9af;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            margin-bottom: 25px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+
+            background: #72c56c;
+            border-radius: 50%;
+
+            box-shadow: 0 0 12px #72c56c;
+        }
+
+        .hero h1 {
+            font-size: clamp(50px, 9vw, 105px);
+            line-height: 0.95;
+
+            font-weight: 1000;
+            letter-spacing: -5px;
+
+            color: #eeeeee;
+
+            text-shadow:
+                0 0 40px rgba(255,255,255,0.05);
+        }
+
+        .hero h1 span {
+            display: block;
+            color: #d3b557;
+        }
+
+        .hero-description {
+            max-width: 650px;
+            margin: 30px auto;
+
+            color: #8f9a92;
+
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+
+            margin-top: 35px;
+
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 190px;
+
+            padding: 15px 25px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                background 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: #c9aa4d;
+            color: #111;
+
+            box-shadow:
+                0 10px 30px rgba(201,170,77,0.15);
+        }
+
+        .btn-primary:hover {
+            background: #e0c568;
+            box-shadow:
+                0 15px 40px rgba(201,170,77,0.25);
+        }
+
+        .btn-secondary {
+            color: #d3b557;
+
+            border: 1px solid #4b442c;
+
+            background: rgba(20, 27, 20, 0.8);
+        }
+
+        .btn-secondary:hover {
+            background: #172019;
+        }
+
+        /* =========================
+           SCROLL
+        ========================= */
+
+        .scroll {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            color: #626c64;
+
+            font-size: 10px;
+            letter-spacing: 3px;
+
+            animation: float 2s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, 0);
+            }
+
+            50% {
+                transform: translate(-50%, 8px);
+            }
+        }
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        section {
+            padding: 100px 7%;
+        }
+
+        .section-header {
+            max-width: 700px;
+            margin-bottom: 45px;
+        }
+
+        .section-label {
+            color: #b89d4b;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 3px;
+
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 52px);
+            color: #f1f1f1;
+        }
+
+        .section-description {
+            margin-top: 15px;
+            color: #89948b;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           STATISZTIKÁK
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+
+            margin-top: -40px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .stat {
+            background: #0c150e;
+
+            border: 1px solid #263728;
+            border-radius: 13px;
+
+            padding: 28px;
+
+            text-align: center;
+
+            transition: 0.25s;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            border-color: #63562e;
+        }
+
+        .stat-number {
+            color: #d3b557;
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .stat-name {
+            color: #727e75;
+            font-size: 11px;
+            margin-top: 7px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           KÁRTYÁK
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 32, 21, 0.9),
+                    rgba(9, 16, 10, 0.9)
+                );
+
+            border: 1px solid #273729;
+            border-radius: 15px;
+
+            padding: 30px;
+
+            transition:
+                transform 0.25s,
+                border-color 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-7px);
+            border-color: #65572e;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background: #18231a;
+            border: 1px solid #344634;
+
+            color: #d3b557;
+
+            font-size: 22px;
+
+            margin-bottom: 22px;
+        }
+
+        .card h3 {
+            font-size: 19px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #7f8b82;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           RENDSZER
+        ========================= */
+
+        .system {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .system-list {
+            margin-top: 25px;
+        }
+
+        .system-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+        .check {
+            flex-shrink: 0;
+
+            width: 28px;
+            height: 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #18241a;
+            border: 1px solid #394a3b;
+            border-radius: 50%;
+
+            color: #d3b557;
+            font-size: 13px;
+        }
+
+        .system-item h4 {
+            margin-bottom: 5px;
+        }
+
+        .system-item p {
+            color: #7f8b82;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .rank-box {
+            padding: 35px;
+
+            border: 1px solid #344533;
+            border-radius: 16px;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(194, 164, 70, 0.1),
+                    transparent 50%
+                ),
+                #0c150e;
+        }
+
+        .rank-top {
+            color: #707b73;
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .rank-big {
+            color: #d3b557;
+            font-size: 55px;
+            font-weight: 1000;
+        }
+
+        .rank-name {
+            font-size: 18px;
+            margin-top: 4px;
+        }
+
+        .rank-line {
+            height: 1px;
+            background: #29382b;
+            margin: 25px 0;
+        }
+
+        .rank-note {
+            color: #7c887f;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           JELENTKEZÉS CTA
+        ========================= */
+
+        .join {
+            padding-top: 60px;
+            padding-bottom: 120px;
+        }
+
+        .join-box {
+            position: relative;
+            overflow: hidden;
+
+            padding: 70px 40px;
+
+            text-align: center;
+
+            border: 1px solid #4c4227;
+            border-radius: 20px;
+
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(201,170,77,0.12),
+                    transparent 60%
+                ),
+                #0b130d;
+        }
+
+        .join-box h2 {
+            font-size: clamp(30px, 5vw, 55px);
+            margin-bottom: 15px;
+        }
+
+        .join-box p {
+            max-width: 600px;
+            margin: auto;
+
+            color: #7f8a82;
+            line-height: 1.7;
+        }
+
+        .join-box .btn {
+            margin-top: 30px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            border-top: 1px solid #1d2b20;
+
+            padding: 35px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            color: #626d65;
+
+            font-size: 12px;
+        }
+
+        footer strong {
+            color: #b9a04e;
+        }
+
+        /* =========================
+           MOBIL
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .nav-links a:nth-child(1),
+            .nav-links a:nth-child(2),
+            .nav-links a:nth-child(3) {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .system {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            .logo-symbol {
+                width: 36px;
+                height: 36px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            section {
+                padding: 75px 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                margin: 0 20px;
+            }
+
+            .stat {
+                padding: 20px 10px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav>
+
+    <div class="logo">
+
+        <div class="logo-symbol">
+            MH
+        </div>
+
+        MAGYAR HONVÉDSÉG RP
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="#rolunk">
+            RÓLUNK
+        </a>
+
+        <a href="#rendszer">
+            RENDSZER
+        </a>
+
+        <a href="#csatlakozas">
+            CSATLAKOZÁS
+        </a>
+
+        <a
+            href="/bejelentkezes.html"
+            class="nav-login"
+        >
+            BEJELENTKEZÉS
+        </a>
+
+        <a
+            href="/regisztracio.html"
+            class="nav-register"
+        >
+            REGISZTRÁCIÓ
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<header class="hero">
+
+    <div class="hero-content">
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            MAGYAR HONVÉDSÉG RP • ONLINE KÖZÖSSÉG
+
+        </div>
+
+        <h1>
+            SZOLGÁLATRA
+            <span>FEL!</span>
+        </h1>
+
+        <p class="hero-description">
+            Lépj be egy katonai szerepjáték-közösségbe,
+            ahol a fegyelem, a csapatmunka és a hiteles
+            szerepjáték áll a középpontban.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                href="/regisztracio.html"
+                class="btn btn-primary"
+            >
+                CSATLAKOZOM
+            </a>
+
+            <a
+                href="#rolunk"
+                class="btn btn-secondary"
+            >
+                TOVÁBBI INFORMÁCIÓ
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="scroll">
+        GÖRGESS LE
+    </div>
+
+</header>
+
+
+<!-- =========================
+     STATISZTIKÁK
+========================= -->
+
+<div class="stats">
+
+    <div class="stat">
+
+        <div class="stat-number">
+            24/7
+        </div>
+
+        <div class="stat-name">
+            Közösségi élet
+        </div>
+
+    </div>
+
+    <div class="stat">
+
+        <div class="stat-number">
+            OR-0
+        </div>
+
+        <div class="stat-name">
+            Kezdő rendfokozat
+        </div>
+
+    </div>
+
+    <div class="stat">
+
+        <div class="stat-number">
+            RP
+        </div>
+
+        <div class="stat-name">
+            Katonai szerepjáték
+        </div>
+
+    </div>
+
+    <div class="stat">
+
+        <div class="stat-number">
+            100%
+        </div>
+
+        <div class="stat-name">
+            Közösségi alapú
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RÓLUNK
+========================= -->
+
+<section id="rolunk">
+
+    <div class="section-header">
+
+        <div class="section-label">
+            RÓLUNK
+        </div>
+
+        <h2 class="section-title">
+            Egy közösség. Egy alakulat.
+        </h2>
+
+        <p class="section-description">
+            Az MH RP célja egy rendezett, élvezhető és
+            aktív katonai szerepjáték-közösség kialakítása.
+            Minden játékos a saját karakterével és
+            teljesítményével építheti a közösséget.
+        </p>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-icon">
+                ★
+            </div>
+
+            <h3>
+                Katonai RP
+            </h3>
+
+            <p>
+                Katonai környezetre épülő szerepjáték,
+                ahol fontos a szabályok és a szerepek
+                megfelelő betartása.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                ⚔
+            </div>
+
+            <h3>
+                Csapatmunka
+            </h3>
+
+            <p>
+                Az alakulatokban való együttműködés,
+                kommunikáció és közös feladatvégrehajtás
+                fontos része a játéknak.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                ◈
+            </div>
+
+            <h3>
+                Fejlődési rendszer
+            </h3>
+
+            <p>
+                Regisztráció után OR-0 rendfokozatról
+                indulhatsz, majd a közösségben végzett
+                munkád alapján fejlődhetsz.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     RENDSZER
+========================= -->
+
+<section id="rendszer">
+
+    <div class="system">
+
+        <div>
+
+            <div class="section-label">
+                HOGYAN MŰKÖDIK?
+            </div>
+
+            <h2 class="section-title">
+                Egyszerű belépés.
+                Komolyabb rendszer.
+            </h2>
+
+            <p class="section-description">
+                A weboldalon saját fiókot hozhatsz létre,
+                majd a fiókodból jelentkezhetsz az alakulatba.
+            </p>
+
+
+            <div class="system-list">
+
+                <div class="system-item">
+
+                    <div class="check">
+                        1
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Regisztráció
+                        </h4>
+
+                        <p>
+                            Hozd létre a saját MH RP-fiókodat
+                            felhasználónévvel és Roblox-névvel.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="system-item">
+
+                    <div class="check">
+                        2
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Kezdő rendfokozat
+                        </h4>
+
+                        <p>
+                            A regisztráció után automatikusan
+                            OR-0 rendfokozatot kapsz.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="system-item">
+
+                    <div class="check">
+                        3
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Jelentkezés
+                        </h4>
+
+                        <p>
+                            Töltsd ki az MH RP jelentkezési
+                            kérdőívet a saját fiókodból.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="system-item">
+
+                    <div class="check">
+                        4
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Elbírálás
+                        </h4>
+
+                        <p>
+                            A vezetőség átnézi a jelentkezésedet,
+                            majd dönt az eredményről.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="rank-box">
+
+            <div class="rank-top">
+                ALAPÉRTELMEZETT RENDSZER
+            </div>
+
+            <div class="rank-big">
+                OR-0
+            </div>
+
+            <div class="rank-name">
+                Kezdő állomány
+            </div>
+
+            <div class="rank-line"></div>
+
+            <p class="rank-note">
+                Minden újonnan regisztrált felhasználó
+                automatikusan OR-0 státusszal kezdi meg
+                a közösségi pályafutását.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CSATLAKOZÁS
+========================= -->
+
+<section
+    id="csatlakozas"
+    class="join"
+>
+
+    <div class="join-box">
+
+        <div class="section-label">
+            KÖVETKEZŐ LÉPÉS
+        </div>
+
+        <h2>
+            Készen állsz a szolgálatra?
+        </h2>
+
+        <p>
+            Hozd létre a fiókodat, válaszd ki a Roblox-nevedet,
+            majd töltsd ki a jelentkezési lapot.
+        </p>
+
+        <a
+            href="/regisztracio.html"
+            class="btn btn-primary"
+        >
+            REGISZTRÁCIÓ
+        </a>
+
+        <a
+            href="/bejelentkezes.html"
+            class="btn btn-secondary"
+        >
+            BEJELENTKEZÉS
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div>
+        © 2026 <strong>Magyar Honvédség RP</strong>
+    </div>
+
+    <div>
+        Nem hivatalos Roblox közösségi projekt.
+    </div>
+
+</footer>
+
+
+</body>
+</html>
