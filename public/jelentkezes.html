@@ -1,1 +1,307 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Jelentkezés - MH RP</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #07110b;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background: #101b13;
+            padding: 20px;
+            border-bottom: 1px solid #344b38;
+        }
+
+        nav a {
+            color: #d7b85b;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .box {
+            background: #101b13;
+            border: 1px solid #344b38;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #d7b85b;
+        }
+
+        h2 {
+            margin-top: 35px;
+            color: #d7b85b;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 13px;
+            background: #07110b;
+            color: white;
+            border: 1px solid #344b38;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            background: #c9aa4d;
+            border: 0;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="/">Főoldal</a>
+    <a href="/fiokom.html">Fiókom</a>
+</nav>
+
+<div class="container">
+
+<div class="box">
+
+<h1>MH RP JELENTKEZÉS</h1>
+
+<p>
+    Töltsd ki figyelmesen az alábbi kérdéseket.
+    A vezetőség a jelentkezést ellenőrizni fogja.
+</p>
+
+<form id="applicationForm">
+
+<h2>Alapadatok</h2>
+
+<label>Életkor</label>
+<input
+    type="number"
+    name="age"
+    min="13"
+    max="100"
+    required
+>
+
+<h2>Motiváció</h2>
+
+<label>
+    Miért szeretnél csatlakozni a Magyar Honvédség RP-hez?
+</label>
+
+<textarea
+    name="motivation"
+    required
+></textarea>
+
+<label>
+    Van korábbi RP tapasztalatod?
+</label>
+
+<textarea
+    name="experience"
+    required
+></textarea>
+
+<h2>MH RP ismeretek</h2>
+
+<label>
+    Mit jelent számodra a fegyelmezett katonai RP?
+</label>
+
+<textarea
+    name="rules"
+    required
+></textarea>
+
+<label>
+    Mit jelent a parancsnoki lánc?
+</label>
+
+<textarea
+    name="chainOfCommand"
+    required
+></textarea>
+
+<label>
+    Miért fontos a csapatmunka egy katonai alakulatban?
+</label>
+
+<textarea
+    name="teamwork"
+    required
+></textarea>
+
+<label>
+    Mit jelent az RP során a szerepjáték hitelessége?
+</label>
+
+<textarea
+    name="roleplay"
+    required
+></textarea>
+
+<label>
+    Mennyire tudsz aktív lenni a közösségben?
+</label>
+
+<textarea
+    name="activity"
+    required
+></textarea>
+
+<label>
+    Mit tennél, ha egy másik játékos konfliktust kezdeményezne veled?
+</label>
+
+<textarea
+    name="conflict"
+    required
+></textarea>
+
+<h2>Nyilatkozat</h2>
+
+<label>
+    Elfogadod az MH RP szabályzatát?
+</label>
+
+<select name="rulesAccepted" required>
+    <option value="">Válassz...</option>
+    <option value="Igen">
+        Igen, elfogadom
+    </option>
+    <option value="Nem">
+        Nem
+    </option>
+</select>
+
+<button type="submit">
+    JELENTKEZÉS ELKÜLDÉSE
+</button>
+
+</form>
+
+<div id="message"></div>
+
+</div>
+</div>
+
+<script>
+
+async function checkLogin() {
+
+    const response =
+        await fetch("/api/me");
+
+    const data =
+        await response.json();
+
+    if (!data.loggedIn) {
+        location.href =
+            "/bejelentkezes.html";
+    }
+}
+
+checkLogin();
+
+document
+    .getElementById("applicationForm")
+    .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+        const form =
+            new FormData(this);
+
+        const data = Object.fromEntries(form);
+
+        const message =
+            document.getElementById("message");
+
+        if (data.rulesAccepted !== "Igen") {
+
+            message.style.color = "#ff7676";
+
+            message.textContent =
+                "A szabályzat elfogadása szükséges!";
+
+            return;
+        }
+
+        const response = await fetch(
+            "/api/applications",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (result.success) {
+
+            message.style.color =
+                "#72d572";
+
+            message.textContent =
+                "A jelentkezésed sikeresen elküldve!";
+
+            this.reset();
+
+        } else {
+
+            message.style.color =
+                "#ff7676";
+
+            message.textContent =
+                result.message;
+        }
+    });
+
+</script>
+
+</body>
+</html>
