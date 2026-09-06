@@ -364,6 +364,24 @@ app.post("/api/admin/login", (req, res) => {
     });
 });
 
+
+// ==============================
+// ADMIN BEJELENTKEZÉS ELLENŐRZÉSE
+// ==============================
+
+app.get("/api/admin/me", (req, res) => {
+    if (req.session.admin === true) {
+        return res.json({
+            loggedIn: true,
+            username: process.env.ADMIN_USERNAME
+        });
+    }
+
+    res.status(401).json({
+        loggedIn: false
+    });
+});
+
 // ==============================
 // JELENTKEZÉSEK LEKÉRÉSE
 // ==============================
