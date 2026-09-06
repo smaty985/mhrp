@@ -477,223 +477,255 @@ td{
 
 <script>
 
+async function checkLogin() {
 
-async function checkLogin(){
+    try {
 
-    const response =
-        await fetch("/api/me");
+        const response = await fetch("/api/admin/me", {
+            credentials: "include"
+        });
 
-    const data =
-        await response.json();
+        if (!response.ok) {
+            window.location.href = "/vezetoseg.html";
+            return false;
+        }
 
+        const data = await response.json();
 
-    if(!data.loggedIn){
+        if (!data.loggedIn) {
+            window.location.href = "/vezetoseg.html";
+            return false;
+        }
 
-        window.location.href =
-            "/vezetoseg.html";
+        document.getElementById("username").textContent =
+            data.username || "Vezetőség";
 
-        return;
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        window.location.href = "/vezetoseg.html";
+
+        return false;
     }
-
-
-    document.getElementById(
-        "username"
-    ).textContent =
-        data.username;
-
 }
 
 
-async function loadApplications(){
+async function loadApplications() {
 
-    const response =
-        await fetch(
-            "/api/applications"
+    try {
+
+        const response = await fetch(
+            "/api/applications",
+            {
+                credentials: "include"
+            }
         );
 
+        if (response.status === 401) {
 
-    if(response.status === 401){
+            window.location.href =
+                "/vezetoseg.html";
 
-        window.location.href =
-            "/vezetoseg.html";
+            return;
+        }
 
-        return;
+        const applications =
+            await response.json();
+
+        const tbody =
+            document.getElementById("applications");
+
+        tbody.innerHTML = "";
+
+        let pending = 0;
+        let accepted = 0;
+        let rejected = 0;
+
+        applications.forEach(app => {
+
+            if (app.status === "Feldolgozás alatt")
+                pending++;
+
+            if (app.status === "Elfogadva")
+                accepted++;
+
+            if (app.status === "Elutasítva")
+                rejected++;
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHtml(app.username || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(app.robloxName || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(String(app.age || "-"))}
+                </td>
+
+                <td>
+                    <span class="badge">
+                        ${escapeHtml(app.status || "-")}
+                    </span>
+                </td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="action"
+                            onclick="changeStatus('${app.id}', 'Elfogadva')">
+                            ✓ Elfogad
+                        </button>
+
+                        <button
+                            class="action"
+                            onclick="changeStatus('${app.id}', 'Elutasítva')">
+                            ✕ Elutasít
+                        </button>
+
+                        <button
+                            class="action"
+                            onclick="changeStatus('${app.id}', 'Feldolgozás alatt')">
+                            ↻ Függőben
+                        </button>
+
+                    </div>
+
+                </td>
+            `;
+
+            tbody.appendChild(row);
+
+        });
+
+        document.getElementById("total").textContent =
+            applications.length;
+
+        document.getElementById("pending").textContent =
+            pending;
+
+        document.getElementById("accepted").textContent =
+            accepted;
+
+        document.getElementById("rejected").textContent =
+            rejected;
+
+    } catch (error) {
+
+        console.error(
+            "Jelentkezések betöltési hiba:",
+            error
+        );
+
     }
-
-
-    const applications =
-        await response.json();
-
-
-    const tbody =
-        document.getElementById(
-            "applications"
-        );
-
-
-    tbody.innerHTML = "";
-
-
-    let pending = 0;
-    let accepted = 0;
-    let rejected = 0;
-
-
-    applications.forEach(app => {
-
-        if(app.status === "Feldolgozás alatt")
-            pending++;
-
-        if(app.status === "Elfogadva")
-            accepted++;
-
-        if(app.status === "Elutasítva")
-            rejected++;
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-                ${escapeHtml(app.name)}
-            </td>
-
-            <td>
-                ${escapeHtml(app.discord)}
-            </td>
-
-            <td>
-                ${escapeHtml(String(app.age))}
-            </td>
-
-            <td>
-                <span class="badge">
-                    ${escapeHtml(app.status)}
-                </span>
-            </td>
-
-            <td>
-
-                <div class="actions">
-
-                    <button
-                        class="action"
-                        onclick="changeStatus(${app.id}, 'Elfogadva')">
-                        ✓ Elfogad
-                    </button>
-
-                    <button
-                        class="action"
-                        onclick="changeStatus(${app.id}, 'Elutasítva')">
-                        ✕ Elutasít
-                    </button>
-
-                    <button
-                        class="action"
-                        onclick="changeStatus(${app.id}, 'Feldolgozás alatt')">
-                        ↻ Függőben
-                    </button>
-
-                </div>
-
-            </td>
-        `;
-
-
-        tbody.appendChild(row);
-
-    });
-
-
-    document.getElementById(
-        "total"
-    ).textContent =
-        applications.length;
-
-
-    document.getElementById(
-        "pending"
-    ).textContent =
-        pending;
-
-
-    document.getElementById(
-        "accepted"
-    ).textContent =
-        accepted;
-
-
-    document.getElementById(
-        "rejected"
-    ).textContent =
-        rejected;
-
 }
 
 
-async function changeStatus(id,status){
+async function changeStatus(id, status) {
 
-    const response =
-        await fetch(
+    try {
+
+        const response = await fetch(
             `/api/applications/${id}`,
             {
-                method:"PATCH",
+                method: "PATCH",
 
-                headers:{
+                headers: {
                     "Content-Type":
                         "application/json"
                 },
 
-                body:JSON.stringify({
-                    status
+                credentials: "include",
+
+                body: JSON.stringify({
+                    status: status
                 })
             }
         );
 
+        if (response.ok) {
 
-    if(response.ok){
+            await loadApplications();
 
-        loadApplications();
+        } else {
 
-    }
+            const data =
+                await response.json();
 
-}
-
-
-async function logout(){
-
-    await fetch(
-        "/api/logout",
-        {
-            method:"POST"
+            alert(
+                data.message ||
+                "Nem sikerült módosítani a státuszt."
+            );
         }
-    );
 
+    } catch (error) {
 
-    window.location.href =
-        "/";
+        console.error(error);
 
+        alert(
+            "Nem sikerült kapcsolódni a szerverhez."
+        );
+    }
 }
 
 
-function escapeHtml(value){
+async function logout() {
+
+    try {
+
+        await fetch(
+            "/api/logout",
+            {
+                method: "POST",
+                credentials: "include"
+            }
+        );
+
+    } finally {
+
+        window.location.href =
+            "/vezetoseg.html";
+    }
+}
+
+
+function escapeHtml(value) {
 
     const div =
         document.createElement("div");
 
-    div.textContent = value;
+    div.textContent =
+        value ?? "";
 
     return div.innerHTML;
-
 }
 
 
-checkLogin();
+async function startDashboard() {
 
-loadApplications();
+    const loggedIn =
+        await checkLogin();
+
+    if (!loggedIn) {
+        return;
+    }
+
+    await loadApplications();
+}
+
+
+startDashboard();
 
 </script>
 
